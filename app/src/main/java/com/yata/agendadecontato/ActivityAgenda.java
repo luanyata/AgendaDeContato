@@ -12,6 +12,8 @@ import android.view.*;
 public class ActivityAgenda extends AppCompatActivity implements View.OnClickListener {
 
     private ImageButton btnAdicionar;
+    private  EditText edtPesquisa;
+    private ListView lstContatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,9 @@ public class ActivityAgenda extends AppCompatActivity implements View.OnClickLis
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        edtPesquisa = (EditText) findViewById(R.id.edtPesquisa);
+        lstContatos = (ListView) findViewById(R.id.lstContatos);
 
         btnAdicionar = (ImageButton) findViewById(R.id.btnAdicionar);
         btnAdicionar.setOnClickListener(this);
