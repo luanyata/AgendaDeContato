@@ -3,6 +3,9 @@ package com.yata.agendadecontato;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.*;
 
 public class ActCadContatos extends AppCompatActivity {
@@ -85,4 +88,26 @@ public class ActCadContatos extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Outros");
     }
 
+    ///Criação do menu na tela
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_contatos, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /// Trata qual item do menu foi selecionado
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mne_acao1:
+                break;
+            case R.id.mne_acao2:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
