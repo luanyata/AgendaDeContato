@@ -12,14 +12,21 @@ import android.view.*;
 import android.database.sqlite.*;
 import android.database.*;
 
+import com.yata.agendadecontato.database.DataBase;
+import com.yata.agendadecontato.dominio.RepositorioContato;
+
 
 public class ActivityAgenda extends AppCompatActivity implements View.OnClickListener {
 
     private ImageButton btnAdicionar;
     private EditText edtPesquisa;
     private ListView lstContatos;
+    private ArrayAdapter<String> adpContatos;
+
     private DataBase dataBase;
     private SQLiteDatabase conn;
+
+    private RepositorioContato repositorioContato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +44,14 @@ public class ActivityAgenda extends AppCompatActivity implements View.OnClickLis
 
         try {
             dataBase = new DataBase(this);
-            conn = dataBase.getReadableDatabase();
+            conn = dataBase.getWritableDatabase();
+
+            repositorioContato = new RepositorioContato(conn);
+
+            repositorioContato.TesteInserirContatos();
+            adpContatos = repositorioContato.BuscaContatos(this);
+
+            lstContatos.setAdapter(adpContatos);
 
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
             dlg.setMessage("Conexão realizada com sucesso");

@@ -1,4 +1,4 @@
-package com.yata.agendadecontato;
+package com.yata.agendadecontato.database;
 
 /**
  * Created by luan on 12/01/16.
