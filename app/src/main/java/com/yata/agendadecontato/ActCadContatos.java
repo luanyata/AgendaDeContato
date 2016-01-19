@@ -1,5 +1,8 @@
 package com.yata.agendadecontato;
 
+import android.app.AlertDialog;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +10,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.*;
+
+import com.yata.agendadecontato.database.DataBase;
+import com.yata.agendadecontato.dominio.Entidades.Contato;
+import com.yata.agendadecontato.dominio.RepositorioContato;
+
+import java.util.Date;
 
 public class ActCadContatos extends AppCompatActivity {
 
@@ -27,6 +36,11 @@ public class ActCadContatos extends AppCompatActivity {
     private ArrayAdapter<String> adpTipoTelefone;
     private ArrayAdapter<String> adpTipoEndereco;
     private ArrayAdapter<String> adpTipoDatasEspeciais;
+
+    private DataBase dataBase;
+    private SQLiteDatabase conn;
+    private RepositorioContato repositorioContato;
+    private Contato contato;
 
 
     @Override
@@ -86,7 +100,22 @@ public class ActCadContatos extends AppCompatActivity {
         adpTipoDatasEspeciais.add("Aniversario");
         adpTipoDatasEspeciais.add("Data Comemorativa");
         adpTipoDatasEspeciais.add("Outros");
+
+        try {
+            dataBase = new DataBase(this);
+            conn = dataBase.getWritableDatabase();
+
+            repositorioContato = new RepositorioContato(conn);
+
+
+        } catch (SQLException ex) {
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao criar o banco " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+        }
     }
+
 
     ///Criação do menu na tela
     @Override
@@ -103,11 +132,46 @@ public class ActCadContatos extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mne_acao1:
+                if (contato == null)
+                    inserir();
+                finish();
+
                 break;
             case R.id.mne_acao2:
+
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void inserir() {
+
+        try {
+            Date date = new Date();
+            contato = new Contato();
+
+            contato.setNome(edtNome.getText().toString());
+            contato.setTelefone(edtTelefone.getText().toString());
+            contato.setEmail(edtEmail.getText().toString());
+            contato.setEndereco(edtEndereco.getText().toString());
+            contato.setGrupo(edtGrupos.getText().toString());
+            contato.setDataEspecial(date);
+
+
+            contato.setTipoTelefone("");
+            contato.setTipoEmail("");
+            contato.setTipoEndereco("");
+            contato.setTipoDataEspecial("");
+            repositorioContato.inserir(contato);
+
+        } catch (Exception ex) {
+
+            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            dlg.setMessage("Erro ao inserir os dados " + ex.getMessage());
+            dlg.setNeutralButton("OK", null);
+            dlg.show();
+
+        }
     }
 }

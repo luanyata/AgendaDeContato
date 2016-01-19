@@ -13,6 +13,7 @@ import android.database.sqlite.*;
 import android.database.*;
 
 import com.yata.agendadecontato.database.DataBase;
+import com.yata.agendadecontato.dominio.Entidades.Contato;
 import com.yata.agendadecontato.dominio.RepositorioContato;
 
 
@@ -21,7 +22,7 @@ public class ActivityAgenda extends AppCompatActivity implements View.OnClickLis
     private ImageButton btnAdicionar;
     private EditText edtPesquisa;
     private ListView lstContatos;
-    private ArrayAdapter<String> adpContatos;
+    private ArrayAdapter<Contato> adpContatos;
 
     private DataBase dataBase;
     private SQLiteDatabase conn;
@@ -48,15 +49,10 @@ public class ActivityAgenda extends AppCompatActivity implements View.OnClickLis
 
             repositorioContato = new RepositorioContato(conn);
 
-            repositorioContato.TesteInserirContatos();
             adpContatos = repositorioContato.BuscaContatos(this);
 
             lstContatos.setAdapter(adpContatos);
 
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-            dlg.setMessage("Conexão realizada com sucesso");
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
 
         } catch (SQLException ex) {
             AlertDialog.Builder dlg = new AlertDialog.Builder(this);
@@ -70,7 +66,14 @@ public class ActivityAgenda extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         Intent it = new Intent(this, ActCadContatos.class);
-        startActivity(it);
+        startActivityForResult(it, 0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        adpContatos = repositorioContato.BuscaContatos(this);
+
+        lstContatos.setAdapter(adpContatos);
     }
 
     @Override
